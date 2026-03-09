@@ -5,7 +5,5 @@
 *.txt
 *.o
 *.s
-a
-build.sh
-main.cpp
-WIP
+
+main*
