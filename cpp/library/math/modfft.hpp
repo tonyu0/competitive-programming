@@ -1,16 +1,14 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
-using namespace std;
 
-// TODO: 多項式同士の演算として書く
-// templateの部分コンパイル時定数にできる？
 template <long long mod = 998244353>
 class modFFT {
 public:
   modFFT() {}
 
-  vector<long long> multiply(vector<long long> a, vector<long long> b) {
+  std::vector<long long> multiply(std::vector<long long> a,
+                                  std::vector<long long> b) {
     int an = a.size();
     int bn = b.size();
     int need = an + bn - 1;
@@ -28,12 +26,12 @@ public:
     a.resize(need);
     return a;
   }
-  vector<long long> pow(vector<long long> a) {
+  std::vector<long long> pow(std::vector<long long> a) {
     size_t n = a.size();
     if (n == 1) return {1, a[0] - 1};
 
-    vector<long long> b(a.begin(), a.begin() + n / 2);
-    vector<long long> c(a.begin() + n / 2, a.end());
+    std::vector<long long> b(a.begin(), a.begin() + n / 2);
+    std::vector<long long> c(a.begin() + n / 2, a.end());
     return multiply(pow(b), pow(c));
   }
 
@@ -77,9 +75,8 @@ private:
 };
 
 int main() {
-  cin.tie(0)->sync_with_stdio(0);
   int n, q, b;
-  cin >> n >> q;
+  std::cin >> n >> q;
   vector<ll> a(n);
   rep(i, 0, n) cin >> a[i];
   modFFT fft = modFFT();

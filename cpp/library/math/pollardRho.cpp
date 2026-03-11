@@ -10,20 +10,6 @@
 #include <vector>
 
 using namespace std;
-using ll = long long;
-#define rep(i, j, n) for (int i = j; i < (n); ++i)
-#define rrep(i, j, n) for (int i = (n)-1; j <= i; --i)
-
-template <typename T>
-std::ostream& operator<<(std::ostream& os, std::vector<T>& a) {
-  os << "{";
-  for (size_t i = 0; i < a.size(); ++i) os << (i > 0 ? "," : "") << a[i];
-  return os << "}";
-}
-
-[[maybe_unused]] constexpr ll MOD = 1e9 + 7;
-[[maybe_unused]] constexpr int INF = 0x3f3f3f3f;
-[[maybe_unused]] constexpr ll INFL = 0x3f3f3f3f3f3f3f3fLL;
 
 long long modpow(long long x, long long e, long long m) {
   long long res = 1;

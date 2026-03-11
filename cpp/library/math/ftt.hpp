@@ -5,7 +5,7 @@ using namespace std;
 
 namespace fft {
 using C = complex<double>;
-const double PI = 3.14159265358979323846;
+static constexpr double PI = M_PI;
 
 void fft(vector<C>& f, int n, int sgn = 1) {
   if (n == 1) return;

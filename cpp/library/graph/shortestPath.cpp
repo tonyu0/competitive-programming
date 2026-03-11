@@ -5,29 +5,14 @@
 #include <queue>
 #include <set>
 #include <vector>
-using namespace std;
-using ll = int64_t;
-#define rep(i, j, n) for (int i = j; i < (int)n; ++i)
-#define rrep(i, j, n) for (int i = (int)n - 1; j <= i; --i)
-
-#define dbg(x) cerr << __LINE__ << ": " << #x << " = " << (x) << '\n'
-template <typename T>
-ostream& operator<<(ostream& os, vector<T>& a) {
-  for (int i = 0; i < (int)a.size(); ++i)
-    os << a[i] << " \n"[i == (int)a.size() - 1];
-  return os;
-}
-
-constexpr ll MOD = 1000000007;
-constexpr int INF = 0x3f3f3f3f;
-constexpr ll INFL = 0x3f3f3f3f3f3f3f3fLL;
 
 template <bool directed = false>
 class shortest_path {
-  using P = pair<int, ll>;
+  using P = std::pair<int, long long>;
+  static constexpr int INF = 0x3f3f3f3f;
 
   int n;
-  vector<vector<P>> graph;
+  std::vector<std::vector<P>> graph;
 
 public:
   shortest_path(int n) : n(n), graph(n) {}
@@ -61,10 +46,10 @@ public:
     return false;
   }
 
-  vector<ll> dijkstra(int s) {
-    vector<ll> dist(n, 1LL << 60);
+  std::vector<ll> dijkstra(int s) {
+    std::vector<ll> dist(n, 1LL << 60);
     dist[s] = 0;
-    priority_queue<P, vector<P>, greater<P>> pq;
+    std::priority_queue<P, std::vector<P>, std::greater<P>> pq;
     pq.emplace(0, s);
     while (!pq.empty()) {
       auto [d, v] = pq.top();

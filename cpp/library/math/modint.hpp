@@ -1,69 +1,100 @@
 #include <vector>
 
-template <long long mod = 1000000007>
+template <std::int64_t Mod>
 class modint {
 public:
-  long long x;
-  constexpr modint(const long long x = 0) noexcept : x(x % mod) {}
-  constexpr long long &value() noexcept { return x; }
-  constexpr const long long &value() const noexcept { return x; }
-  constexpr modint operator+(const modint rhs) const noexcept {
-    return modint(*this) += rhs;
-  }
-  constexpr modint operator-(const modint rhs) const noexcept {
-    return modint(*this) -= rhs;
-  }
-  constexpr modint operator*(const modint rhs) const noexcept {
-    return modint(*this) *= rhs;
-  }
-  constexpr modint operator/(const modint rhs) const noexcept {
-    return modint(*this) /= rhs;
-  }
-  constexpr modint &operator+=(const modint rhs) noexcept {
-    if ((x += rhs.x) >= mod) x -= mod;
-    return *this;
-  }
-  constexpr modint &operator-=(const modint rhs) noexcept {
-    if ((x += mod - rhs.x) >= mod) x -= mod;
-    return *this;
-  }
-  constexpr modint &operator*=(const modint rhs) noexcept {
-    x = x * rhs.x % mod;
-    return *this;
-  }
-  constexpr modint &operator/=(const modint rhs) noexcept {
-    *this *= rhs.inverse();
-    return *this;
-  }
-  constexpr bool operator==(const modint &rhs) const { return x == rhs.x; }
-  constexpr bool operator!=(const modint &rhs) const { return x != rhs.x; }
-  modint inverse() const {
-    long long a = x, b = mod, u = 1, v = 0, t;
-    while (b > 0) {
-      t = a / b;
-      swap(a -= t * b, b);
-      swap(u -= t * v, v);
-    }
-    return modint(u + mod);
+  using i64 = std::int64_t;
+
+private:
+  i64 v;
+  static constexpr i64 normalize(i64 x) noexcept {
+    x %= Mod;
+    if (x < 0) x += Mod;
+    return x;
   }
 
-  modint pow(long long exp) const {
-    modint res(1), mul(x);
+public:
+  constexpr modint() noexcept : v(0) {}
+  constexpr modint(i64 x) noexcept : v(normalize(x)) {}
+  [[nodiscard]] static constexpr i64 mod() noexcept { return Mod; }
+  [[nodiscard]] constexpr i64 val() const noexcept { return v; }
+
+  /* operators */
+  [[nodiscard]] constexpr modint operator+(const modint &rhs) const noexcept {
+    return modint(*this) += rhs;
+  }
+  [[nodiscard]] constexpr modint operator-(const modint &rhs) const noexcept {
+    return modint(*this) -= rhs;
+  }
+  [[nodiscard]] constexpr modint operator*(const modint &rhs) const noexcept {
+    return modint(*this) *= rhs;
+  }
+  [[nodiscard]] constexpr modint operator/(const modint &rhs) const noexcept {
+    return modint(*this) /= rhs;
+  }
+  constexpr modint &operator+=(const modint &rhs) noexcept {
+    v += rhs.v;
+    if (v >= Mod) v -= Mod;
+    return *this;
+  }
+  constexpr modint &operator-=(const modint &rhs) noexcept {
+    v -= rhs.v;
+    if (v < 0) v += Mod;
+    return *this;
+  }
+  constexpr modint &operator*=(const modint &rhs) noexcept {
+    v = (v * rhs.v) % Mod;
+    return *this;
+  }
+  constexpr modint &operator/=(const modint &rhs) noexcept {
+    return *this *= rhs.inv();
+  }
+
+  /* comparison */
+  [[nodiscard]] constexpr bool operator==(const modint &rhs) const noexcept {
+    return v == rhs.v;
+  }
+  [[nodiscard]] constexpr bool operator!=(const modint &rhs) const noexcept {
+    return v != rhs.v;
+  }
+
+  /* inverse (extgcd) */
+  [[nodiscard]] constexpr modint inv() const noexcept {
+    i64 a = v, b = Mod;
+    i64 s = 1, t = 0;
+    while (b > 0) {
+      i64 q = a / b;
+      a -= q * b;
+      swap(a, b);
+      s -= q * t;
+      swap(s, t);
+    }
+    return modint(s);
+  }
+
+  /* power */
+  [[nodiscard]] constexpr modint pow(i64 exp) const noexcept {
+    modint base = *this;
+    modint res = 1;
     while (exp > 0) {
-      if (exp & 1) res *= mul;
-      mul *= mul;
+      if (exp & 1) res *= base;
+      base *= base;
       exp >>= 1;
     }
     return res;
   }
-  operator long long() const { return x; }
-  friend ostream &operator<<(ostream &os, const modint &rhs) {
-    return os << rhs.x;
+
+  /* conversion */
+  explicit constexpr operator i64() const noexcept { return v; }
+
+  /* IO */
+  friend std::ostream &operator<<(std::ostream &os, const modint &m) {
+    return os << m.v;
   }
-  friend istream &operator>>(istream &is, modint &a) {
-    long long t;
+  friend std::istream &operator>>(std::istream &is, modint &m) {
+    i64 t;
     is >> t;
-    a = modint<mod>(t);
+    m = modint(t);
     return is;
   }
 };

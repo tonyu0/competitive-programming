@@ -1,12 +1,12 @@
 #include <algorithm>
 #include <complex>
 #include <vector>
-using namespace std;
 
-constexpr double EPS = 1e-10;
-using Point = complex<double>;
-using Line = pair<Point, Point>;
-using Polygon = vector<Point>;
+namespace geo_utils {
+static constexpr double EPS = 1e-10;
+using Point = std::complex<double>;
+using Line = std::pair<Point, Point>;
+using Polygon = std::vector<Point>;
 bool compare(const Point &a, const Point &b) { // x ascending order
   if (a.real() != b.real()) return a.real() < b.real();
   return a.imag() < b.imag();
@@ -64,8 +64,8 @@ double distance(Line s, Point p) {
 }
 double distance(Line s1, Line s2) {
   if (intersect(s1, s2)) return 0.0;
-  return min(min(distance(s1, s2.first), distance(s1, s2.second)),
-             min(distance(s2, s1.first), distance(s2, s1.second)));
+  return std::min(std::min(distance(s1, s2.first), distance(s1, s2.second)),
+                  std::min(distance(s2, s1.first), distance(s2, s1.second)));
 }
 
 double area(Polygon &ps) {
@@ -75,6 +75,7 @@ double area(Polygon &ps) {
   return abs(res) / 2.0;
 }
 
+// Graham scan: https://en.wikipedia.org/wiki/Graham_scan
 Polygon convex_hull(Polygon &ps) {
   sort(ps.begin(), ps.end(), compare);
   int n = (int)ps.size(), k = 0;
@@ -93,6 +94,7 @@ Polygon convex_hull(Polygon &ps) {
   return res;
 }
 
+// Calipers: https://en.wikipedia.org/wiki/Rotating_calipers
 double caliper(Polygon &ps) {
   ps = convex_hull(ps);
   int n = (int)ps.size();
@@ -109,7 +111,7 @@ double caliper(Polygon &ps) {
   double res = 0.0;
   // rotate 180 degrees
   while (i != sj || j != si) {
-    res = max(res, abs(ps[i] - ps[j]));
+    res = std::max(res, abs(ps[i] - ps[j]));
     if (cross(ps[(i + 1) % n] - ps[i], ps[(j + 1) % n] - ps[j]) < 0) {
       i = (i + 1) % n;
     } else {
@@ -119,3 +121,4 @@ double caliper(Polygon &ps) {
 
   return res;
 }
+}; // namespace geo_utils
