@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>math</title>
+</head>
+
+<body>
+    <div class="container">
+        <pre><code>
+// 使用例
+// https://atcoder.jp/contests/abc018/tasks/abc018_4
+void ABC018D() {
+  int N, M, P, Q, R, x, y, z, happy[325][325];
+  std::cin >> N >> M >> P >> Q >> R;
+  for (int i = 0; i < R; ++i) {
+    std::cin >> x >> y >> z;
+    --x, --y;
+    happy[x][y] = z;
+  }
+
+  // 上記の関数で片方の組み合わせは全列挙できるので、もう片方の最適な選び方を速めに決める。
+  int ans = 0;
+  for (int comb = (1 << P) - 1; comb < (1 << N);
+       comb = math_utils::next_combination(comb)) {
+    std::vector<int> otoko(M);
+    for (int i = 0; i < N; ++i)
+      if (comb >> i & 1)
+        for (int j = 0; j < M; ++j) otoko[j] += happy[i][j];
+    sort(otoko.rbegin(), otoko.rend());
+
+    int tmp = 0;
+    for (int i = 0; i < Q; ++i) tmp += otoko[i];
+    ans = std::max(ans, tmp);
+  }
+  std::cout << ans << '\n';
+}
+
+// https://atcoder.jp/contests/abc270/tasks/abc270_g
+int ABC270G() {
+  // まずA,Bは定数なので操作が位数p以下の巡回群になってそう
+  // f^x(s) = g mod p
+  // となる最小のx
+  // f(x) = a * x + b
+  // f(0) = 1 * s + 0
+  // x = m*i + jとすると
+  // f^(i*m)(s) = f^(-j)(g) mod p
+  // これらを満たす最小のi,jを求める
+  // 0<=i<m, 0<=j<m
+  // f^mとf^(-1)がもとまれば、i,jを走査できる
+  // f^(-1)(x) = x / a - b / a
+  // f^mは普通に求める. x_{i+1} = x_i * a + bにx_i=x_{i-1} * ca + cbを代入して
+  // f^2の係数を出す感じ...を繰り返す
+  int t;
+  std::cin >> t;
+  while (t--) {
+    long long p, a, b, s, g;
+    std::cin >> p >> a >> b >> s >> g;
+    if (s == g)
+      std::cout << 0 << '\n';
+    else if (a == 0) {
+      if (b == g)
+        std::cout << 1 << '\n';
+      else
+        std::cout << -1 << '\n';
+    } else {
+      long long m = sqrt(p);
+      long long ma = 1, mb = 0; // m回適用した時の係数
+      for (int i = 0; i < m; ++i) {
+        // X_{i+1} = X_i * a + b
+        // a -> a^2, b -> a * b + b
+        mb = (a * mb + b) % p;
+        ma = ma * a % p;
+      }
+      long long ia = math_utils::mod_pow(a, p - 2, p);
+      long long ib = ((-b * ia) % p + p) % p;
+      // f^(-1) = ia * x + ib
+
+      std::unordered_map<int64_t, int64_t> table;
+      for (long long j = 0; j <= m; ++j) {
+        if (table.find(g) == table.end()) table[g] = j;
+        g = (g * ia + ib) % p;
+      }
+      long long ans = -1;
+      for (long long i = 0; i <= m; ++i) {
+        auto itr = table.find(s);
+        if (itr != table.end()) {
+          ans = m * i + itr->second;
+          break;
+        }
+        s = (s * ma + mb) % p;
+      }
+      std::cout << ans << '\n';
+    }
+  }
+}
+
+// https://atcoder.jp/contests/arc042/tasks/arc042_d
+int ARC042D() {
+  long long X, P, A, B;
+  std::cin >> X >> P >> A >> B;
+  // X^i = Y(mod P)を考える。
+  // iを全探索すると間に合わないのでYを固定して離散対数問題を解く。
+  // Yは周期P-1なので、Pがでかいと結局間に合わないので、工夫する。
+  if (B - A + 1 > P - 1) {
+    std::cout << 1;
+  } else if (B - A <
+             100000) // 試すiが小さいとBSGSがTLEするのでここは愚直にやる。
+  {
+    int ans = P;
+    // X^A (mod P)
+    int t = math_utils::mod_pow(X, A, P);
+    for (int i = 0; i < B - A + 1; ++i) {
+      ans = std::min(ans, t);
+      t = t * X % P;
+    }
+    std::cout << ans;
+  } else {
+    A %= P - 1;
+    B %= P - 1;
+    // BSGSを使う。
+    // X^i = h(mod P)
+    for (int h = 0; h < P; ++h) {
+      int res = math_utils::babystep_giantstep(X, h, P);
+      if (A <= res && res <= B) {
+        std::cout << h;
+        break;
+      }
+    }
+  }
+  std::cout << '\n';
+  return 0;
+}
+
+// 解けてない
+// https://atcoder.jp/contests/arc033/tasks/arc033_4
+void ARC033D() {
+  int n;
+  std::cin >> n;
+  long p, t;
+
+  std::vector<long> x(n + 1), y(n + 1);
+  for (int i = 0; i <= n; ++i) {
+    std::cin >> p;
+    x[i] = i, y[i] = p;
+  }
+  std::cin >> t;
+  std::cout << math_utils::LagrangeInterpolation<long>(x, y, t) << '\n';
+}
+        </code></pre>
+    </div>
+</body>
+
+</html>
