@@ -1,12 +1,3 @@
----
-layout: default
-title: fenwick_tree
----
-
-# {{ page.title }}
-
-## 概要
-
 ### Points:
 各数字のLSBは区間の長さを表す。LSBはi&-iみたいに簡単に取れるので左端から　すべて埋められる
 更新時は、被覆される要素すべて更新　たかだかlogn　単純に区間のサイズを足し引きして必要なところを更新している。
@@ -29,10 +20,3 @@ O(logn) each
 ## verify
 
 - lower_bound(): https://atcoder.jp/contests/arc033/submissions/58037272
-
-
-## コード
-
-{% highlight cpp %}
-{% include data-structure/fenwick_tree.hpp %}
-{% endhighlight %}

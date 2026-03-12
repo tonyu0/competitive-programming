@@ -1,12 +1,3 @@
----
-layout: default
-title: math_utils
----
-
-# {{ page.title }}
-
-## 概要
-
 ### ext_gcd
 a * x + b * y = gcd(a, b)を満たすx, yを取得
 最終的にa0 = gcd(a, b), b0 = 0, x = 1, y = 0の状態を作り出す。
@@ -86,8 +77,3 @@ https://atcoder.jp/contests/arc042/submissions/8698256
 ### lagrange_interpolation
 https://atcoder.jp/contests/arc033/submissions/8525787
 解けてない
-
-## コード
-```
-# comment
-```

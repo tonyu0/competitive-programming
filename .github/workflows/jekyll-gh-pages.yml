@@ -28,12 +28,22 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with: { python-version: '3.x' }
+
+      - name: Generate Pages
+        run: |
+          python build_pages.py
+          cp ./docs/_config.yml ./docs/index.md ./_build
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
-          source: ./
+          source: ./_build
           destination: ./_site
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
