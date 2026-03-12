@@ -28,7 +28,7 @@ for root, dirs, files in os.walk(LIB_DIR):
         content += f"## 実装コード\n{{% highlight {lang} %}}\n"
         with open(os.path.join(root, file), "r") as f:
             content += f.read()
-        content += "\n{{% endhighlight %}}\n"
+        content += "\n{% endhighlight %}\n"
         
         # Make an output directory
         os.makedirs(os.path.join(OUT_DIR, os.path.dirname(rel_path)), exist_ok=True)
