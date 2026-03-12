@@ -32,6 +32,7 @@ O(logn) each
 
 
 ## コード
-```
-# comment
-```
+
+{% highlight cpp %}
+{% include data-structure/fenwick_tree.hpp %}
+{% endhighlight %}
