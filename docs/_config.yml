@@ -2,4 +2,3 @@ theme: jekyll-theme-minimal
 title: Competitive programming library notes
 logo: https://avatars.githubusercontent.com/u/24566393?s=48&amp;v=4
 description: Competitive programming library notes
-include: [asm/library, cpp/library, haskell/lirary, rust/library]
